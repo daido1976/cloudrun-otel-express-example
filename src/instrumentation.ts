@@ -1,17 +1,14 @@
 import { NodeSDK } from "@opentelemetry/sdk-node";
-import { ConsoleSpanExporter } from "@opentelemetry/sdk-trace-node";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import {
-  PeriodicExportingMetricReader,
-  ConsoleMetricExporter,
-} from "@opentelemetry/sdk-metrics";
+  ConsoleSpanExporter,
+  SimpleSpanProcessor,
+} from "@opentelemetry/sdk-trace-node";
+import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 
 const sdk = new NodeSDK({
-  traceExporter: new ConsoleSpanExporter(),
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new ConsoleMetricExporter(),
-  }),
+  spanProcessor: new SimpleSpanProcessor(new ConsoleSpanExporter()),
   instrumentations: [getNodeAutoInstrumentations()],
 });
 
 sdk.start();
+console.log("OpenTelemetry tracing started (ConsoleSpanExporter)");
